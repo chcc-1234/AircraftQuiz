@@ -1,12 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const Aircraft = require('../models/Aircraft');
-const authMiddleware = require('../middleware/authMiddleware');
 
 /* ======================
-   ADD AIRCRAFT (Protected)
+   ADD AIRCRAFT
 ====================== */
-router.post('/', authMiddleware, async (req, res) => {
+router.post('/', async (req, res) => {
     try {
         const { name, category, images } = req.body;
 
@@ -39,7 +38,7 @@ router.post('/', authMiddleware, async (req, res) => {
 
 
 /* ======================
-   GET ALL AIRCRAFT (Optional / Debug)
+   GET ALL AIRCRAFT
 ====================== */
 router.get('/', async (req, res) => {
     try {
