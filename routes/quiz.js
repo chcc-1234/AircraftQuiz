@@ -68,9 +68,9 @@ router.post('/start', (req, res) => {
             ? allAircraft
             : allAircraft.filter(a => a.category === mode);
 
-    if (filtered.length < 4) {
+    if (filtered.length < 6) {
         return res.status(400).json({
-            message: "Not enough aircraft in this category to start quiz"
+            message: "Not enough aircraft in this category to start quiz (need at least 6)"
         });
     }
 
@@ -119,32 +119,30 @@ router.get('/question/:sessionId', (req, res) => {
         available[Math.floor(Math.random() * available.length)];
 
     // -------------------------------
-    // NEW LOGIC: SAME SUB-CATEGORY FIRST
+    // SAME FAMILY FIRST – 5 DISTRACTORS
     // -------------------------------
 
-    // Try to get distractors from same family
     let sameFamily = session.aircraftPool.filter(
         a => a.family === correct.family && a.id !== correct.id
     );
 
     sameFamily = sameFamily.sort(() => 0.5 - Math.random());
 
-    let distractors = sameFamily.slice(0, 3);
+    let distractors = sameFamily.slice(0, 5);
 
-    // If not enough in same family, fill from other families
-    if (distractors.length < 3) {
-        const needed = 3 - distractors.length;
+    // If not enough in same family, fill from others
+    if (distractors.length < 5) {
+        const needed = 5 - distractors.length;
 
-        const otherFamilies = session.aircraftPool
+        const others = session.aircraftPool
             .filter(a =>
-                a.family !== correct.family &&
                 a.id !== correct.id &&
                 !distractors.some(d => d.id === a.id)
             )
             .sort(() => 0.5 - Math.random())
             .slice(0, needed);
 
-        distractors = [...distractors, ...otherFamilies];
+        distractors = [...distractors, ...others];
     }
 
     const options = [
