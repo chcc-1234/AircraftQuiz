@@ -2,13 +2,12 @@ const express = require('express');
 const router = express.Router();
 const Aircraft = require('../models/Aircraft');
 const QuizSession = require('../models/QuizSession');
-const authMiddleware = require('../middleware/authMiddleware');
 
 
 // ==============================
 // START QUIZ
 // ==============================
-router.post('/start', authMiddleware, async (req, res) => {
+router.post('/start', async (req, res) => {
     try {
         const { mode } = req.body;
 
@@ -33,7 +32,6 @@ router.post('/start', authMiddleware, async (req, res) => {
         const questionLimit = Math.min(20, availableCount);
 
         const session = new QuizSession({
-            user: req.user.id,
             mode,
             score: 0,
             totalQuestions: questionLimit,
@@ -58,9 +56,9 @@ router.post('/start', authMiddleware, async (req, res) => {
 
 
 // ==============================
-// GET QUESTION (SMART FAMILY FALLBACK)
+// GET QUESTION
 // ==============================
-router.get('/question/:sessionId', authMiddleware, async (req, res) => {
+router.get('/question/:sessionId', async (req, res) => {
     try {
         const session = await QuizSession.findById(req.params.sessionId);
 
@@ -79,7 +77,6 @@ router.get('/question/:sessionId', authMiddleware, async (req, res) => {
             });
         }
 
-        // Prevent correct answers from repeating
         let correctFilter = {
             _id: { $nin: session.usedAircraft }
         };
@@ -104,14 +101,12 @@ router.get('/question/:sessionId', authMiddleware, async (req, res) => {
         const correctAircraft =
             availableCorrect[Math.floor(Math.random() * availableCorrect.length)];
 
-        // Try SAME FAMILY first
         let distractorPool = await Aircraft.find({
             category: correctAircraft.category,
             family: correctAircraft.family,
             _id: { $ne: correctAircraft._id }
         });
 
-        // If not enough in family, fallback to SAME CATEGORY
         if (distractorPool.length < 3) {
             distractorPool = await Aircraft.find({
                 category: correctAircraft.category,
@@ -159,7 +154,7 @@ router.get('/question/:sessionId', authMiddleware, async (req, res) => {
 // ==============================
 // SUBMIT ANSWER
 // ==============================
-router.post('/answer', authMiddleware, async (req, res) => {
+router.post('/answer', async (req, res) => {
     try {
         const { sessionId, aircraftId, selectedAnswer } = req.body;
 

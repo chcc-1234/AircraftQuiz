@@ -1,11 +1,6 @@
 const mongoose = require('mongoose');
 
 const quizSessionSchema = new mongoose.Schema({
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-    },
     mode: {
         type: String, // Civilian, Military, UAS, Random
         required: true

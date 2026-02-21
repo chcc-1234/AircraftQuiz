@@ -1,4 +1,3 @@
-let token = localStorage.getItem("token");
 let sessionId = null;
 let currentAircraftId = null;
 let currentImages = [];
@@ -8,40 +7,13 @@ let timerInterval = null;
 let timeLeft = 30;
 
 
-// ================= LOGIN =================
-async function login() {
-
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
-
-    const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password })
-    });
-
-    const data = await res.json();
-
-    if (data.token) {
-        localStorage.setItem("token", data.token);
-        token = data.token;
-
-        document.getElementById("loginSection").style.display = "none";
-        document.getElementById("modeSection").style.display = "block";
-    } else {
-        alert(data.message || "Login failed");
-    }
-}
-
-
 // ================= START QUIZ =================
 async function startQuiz(mode) {
 
     const res = await fetch("/api/quiz/start", {
         method: "POST",
         headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + token
+            "Content-Type": "application/json"
         },
         body: JSON.stringify({ mode })
     });
@@ -68,15 +40,7 @@ async function loadQuestion() {
     clearInterval(timerInterval);
     answering = false;
 
-    const res = await fetch(
-        `/api/quiz/question/${sessionId}`,
-        {
-            headers: {
-                "Authorization": "Bearer " + token
-            }
-        }
-    );
-
+    const res = await fetch(`/api/quiz/question/${sessionId}`);
     const data = await res.json();
 
     if (!res.ok) {
@@ -117,7 +81,6 @@ async function loadQuestion() {
 
 // ================= IMAGE CYCLING =================
 function cycleImage() {
-
     if (currentImages.length <= 1) return;
 
     currentImageIndex++;
@@ -136,8 +99,7 @@ function startTimer() {
 
     timeLeft = 30;
 
-    document.getElementById("timer").innerText =
-        `Time: ${timeLeft}s`;
+    document.getElementById("timer").innerText = `Time: ${timeLeft}s`;
 
     timerInterval = setInterval(() => {
 
@@ -163,21 +125,17 @@ async function submitAnswer(selectedAnswer) {
 
     clearInterval(timerInterval);
 
-    const res = await fetch(
-        "/api/quiz/answer",
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + token
-            },
-            body: JSON.stringify({
-                sessionId,
-                aircraftId: currentAircraftId,
-                selectedAnswer
-            })
-        }
-    );
+    const res = await fetch("/api/quiz/answer", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            sessionId,
+            aircraftId: currentAircraftId,
+            selectedAnswer
+        })
+    });
 
     const data = await res.json();
 
@@ -219,11 +177,8 @@ function showFinalScreen(score, total) {
 }
 
 
-// ================= AUTO LOGIN CHECK =================
+// ================= AUTO LOAD =================
 window.onload = function () {
-
-    if (token) {
-        document.getElementById("loginSection").style.display = "none";
-        document.getElementById("modeSection").style.display = "block";
-    }
+    document.getElementById("loginSection").style.display = "none";
+    document.getElementById("modeSection").style.display = "block";
 };
