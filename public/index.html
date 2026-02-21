@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Aircraft Recognition Quiz</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #111;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+        }
+
+        button {
+            margin: 8px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 6px;
+            background-color: #1f6feb;
+            color: white;
+        }
+
+        button:hover {
+            background-color: #2b8cff;
+        }
+
+        input {
+            padding: 8px;
+            margin: 5px;
+            font-size: 16px;
+        }
+
+        /* Image Frame */
+        .image-container {
+            position: relative;
+            width: 850px;
+            height: 500px;
+            margin: 20px auto;
+            background: black;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+
+        #aircraftImage {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        .fullscreen-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.6);
+            border: none;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        #imageModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        #modalImage {
+            max-width: 95%;
+            max-height: 95%;
+        }
+
+        #quizSection { display: none; }
+        #finalScreen { display: none; }
+    </style>
+</head>
+
+<body>
+
+<h1>Aircraft Recognition Quiz</h1>
+
+<!-- LOGIN -->
+<div id="loginSection">
+    <input id="username" placeholder="Username">
+    <input id="password" type="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+</div>
+
+<!-- MODE SELECTION -->
+<div id="modeSection" style="display:none;">
+    <h2>Select Mode</h2>
+    <button onclick="startQuiz('Military')">Military</button>
+    <button onclick="startQuiz('Civilian')">Civilian</button>
+    <button onclick="startQuiz('PODs&UAS&Ordnance')">PODs & UAS & Ordnance</button>
+    <button onclick="startQuiz('Random')">Random</button>
+</div>
+
+<!-- QUIZ -->
+<div id="quizSection">
+    <h2 id="progress"></h2>
+    <h3 id="score">Score: 0</h3>
+    <h3 id="timer"></h3>
+
+    <div class="image-container">
+        <img id="aircraftImage">
+        <button class="fullscreen-btn" onclick="openFullscreen()">⛶</button>
+    </div>
+
+    <div id="options"></div>
+    <h3 id="result"></h3>
+</div>
+
+<!-- FINAL SCREEN -->
+<div id="finalScreen">
+    <h2 id="finalScore"></h2>
+    <button onclick="location.reload()">Play Again</button>
+</div>
+
+<!-- FULLSCREEN MODAL -->
+<div id="imageModal">
+    <img id="modalImage">
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

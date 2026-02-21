@@ -1,0 +1,31 @@
+body {
+    background-color: #111;
+    color: white;
+    font-family: Arial;
+    text-align: center;
+}
+
+.container {
+    margin-top: 40px;
+}
+
+button {
+    padding: 10px 20px;
+    margin: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+button:hover {
+    transform: scale(1.05);
+    background-color: #333;
+}
+
+#aircraftImage {
+    width: 500px;
+    height: 300px;
+    object-fit: cover;
+    margin: 20px 0;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}

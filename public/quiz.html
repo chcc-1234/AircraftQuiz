@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Aircraft Quiz</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container" id="quizScreen">
+
+    <h2 id="progress">Question 1 / 20</h2>
+    <h2 id="score">Score: 0</h2>
+    <h3 id="timer">Time: 30s</h3>
+
+    <img id="aircraftImage" />
+
+    <div id="options"></div>
+
+    <p id="result"></p>
+
+    <div id="finalScreen" style="display:none;">
+        <h2>Quiz Completed</h2>
+        <h3 id="finalScore"></h3>
+        <button onclick="location.href='index.html'">Back to Menu</button>
+    </div>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
