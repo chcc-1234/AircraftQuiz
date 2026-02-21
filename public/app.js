@@ -29,7 +29,7 @@ async function login() {
         document.getElementById("loginSection").style.display = "none";
         document.getElementById("modeSection").style.display = "block";
     } else {
-        alert("Login failed");
+        alert(data.message || "Login failed");
     }
 }
 
@@ -37,7 +37,7 @@ async function login() {
 // ================= START QUIZ =================
 async function startQuiz(mode) {
 
-    const res = await fetch("http://localhost:5000/api/quiz/start", {
+    const res = await fetch("/api/quiz/start", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -69,7 +69,7 @@ async function loadQuestion() {
     answering = false;
 
     const res = await fetch(
-        `http://localhost:5000/api/quiz/question/${sessionId}`,
+        `/api/quiz/question/${sessionId}`,
         {
             headers: {
                 "Authorization": "Bearer " + token
@@ -131,21 +131,6 @@ function cycleImage() {
 }
 
 
-// ================= FULLSCREEN =================
-function openFullscreen() {
-
-    const modal = document.getElementById("imageModal");
-    const modalImg = document.getElementById("modalImage");
-
-    modalImg.src = currentImages[currentImageIndex];
-    modal.style.display = "flex";
-
-    modal.onclick = () => {
-        modal.style.display = "none";
-    };
-}
-
-
 // ================= TIMER =================
 function startTimer() {
 
@@ -179,7 +164,7 @@ async function submitAnswer(selectedAnswer) {
     clearInterval(timerInterval);
 
     const res = await fetch(
-        "http://localhost:5000/api/quiz/answer",
+        "/api/quiz/answer",
         {
             method: "POST",
             headers: {
@@ -232,6 +217,8 @@ function showFinalScreen(score, total) {
     document.getElementById("finalScore").innerText =
         `Final Score: ${score} / ${total}`;
 }
+
+
 // ================= AUTO LOGIN CHECK =================
 window.onload = function () {
 
