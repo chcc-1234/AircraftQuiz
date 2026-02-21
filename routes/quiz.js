@@ -118,10 +118,34 @@ router.get('/question/:sessionId', (req, res) => {
     const correct =
         available[Math.floor(Math.random() * available.length)];
 
-    const distractors = session.aircraftPool
-        .filter(a => a.id !== correct.id)
-        .sort(() => 0.5 - Math.random())
-        .slice(0, 3);
+    // -------------------------------
+    // NEW LOGIC: SAME SUB-CATEGORY FIRST
+    // -------------------------------
+
+    // Try to get distractors from same family
+    let sameFamily = session.aircraftPool.filter(
+        a => a.family === correct.family && a.id !== correct.id
+    );
+
+    sameFamily = sameFamily.sort(() => 0.5 - Math.random());
+
+    let distractors = sameFamily.slice(0, 3);
+
+    // If not enough in same family, fill from other families
+    if (distractors.length < 3) {
+        const needed = 3 - distractors.length;
+
+        const otherFamilies = session.aircraftPool
+            .filter(a =>
+                a.family !== correct.family &&
+                a.id !== correct.id &&
+                !distractors.some(d => d.id === a.id)
+            )
+            .sort(() => 0.5 - Math.random())
+            .slice(0, needed);
+
+        distractors = [...distractors, ...otherFamilies];
+    }
 
     const options = [
         correct.natoName,
